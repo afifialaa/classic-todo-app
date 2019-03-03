@@ -1,0 +1,23 @@
+*{
+	box-sizing: border-box;
+}
+
+body{
+
+}
+
+h1{
+	text-align: center;
+}
+
+form input[type="text"]{
+	width: 90%;
+}
+
+/* submit button */
+form input[type="submit"]{
+	padding: 2px auto;
+	position: relative;
+	top:-33px;
+	left: 500px;
+}
