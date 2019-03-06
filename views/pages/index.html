@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Todos</title>
+     <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script> 
+
+    <link rel="stylesheet" href="stylesheets/publicStyle.css">
+    <link rel="stylesheet" href="stylesheets/indexStyle.css">
+    </style>
+</head>
+    <body>
+
+    	<div class="content container">
+    		<div class="row">
+
+ 				<!-- login form -->
+    			<div class="col-md-5">
+    				<form method="POST" action="/login" name="signin">
+    					<h2> Login </h2>
+    					<input type="email" name="email" placeholder="Email" class="form-control">
+    					<br>
+    					<input type="password" name="password" placeholder="password" class="form-control"> 
+    					<br>
+    					<input type="submit" value="login" class="form-control">
+    				</form>
+    			</div>
+
+    			<div class="col-md-2"></div>
+
+    			<!-- signup form -->
+    			<div class="col-md-5">
+    				<form method="POST" action="/signup" name="signup">
+    					<h2>Signup</h2>
+    					<input type="text" name="firstName" placeholder="First Name" class="form-control">
+    					<br>
+    					<input type="text" name="lastName" placeholder="Last Name" class="form-control">
+    					<br>
+    					<input type="email" name="email" placeholder="Email" class="form-control">
+    					<br>
+    					<input type="password" name="password" placeholder="password" class="form-control"> 
+    					<br>
+    					<input type="submit" value="signup" class="form-control">
+    				</form>
+    			</div>
+    		</div>
+		</div>
+
+	</body>
+</html>

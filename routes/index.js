@@ -1,58 +1,96 @@
 var express = require('express');
 var router = express.Router();
 
+var bodyParser = require('body-parser');
+
 const assert = require('assert');
 
 const MongoClient = require('mongodb').MongoClient;
-
-//database connection
 const dbUrl = 'mongodb://localhost:27017/';
 const dbName = 'todos';
 const client = new MongoClient(dbUrl);
 
-
-/* GET home page. */
-router.get('/', function(req, res) {
-	console.log('server is running.....');
-	client.connect(function(err, client){
-        if(err) throw err;
-		console.log('connected to database server : find');
-		var db = client.db(dbName);
-        var col = db.collection('todos');
-		
-        //find in database
-		col.find({}).toArray(function(err, docs){
-			console.log('found everything');
-			//client.close();
-            var result = docs;
-            //render page with tasks
-            res.render('index.html', {tasks:result});
-		});
-	});
+client.connect(function(err, client){
+	if(err) throw err;
+	console.log('connected to db server');
 });
 
-// POST home page
-router.post('/addTask', function(req, res){
-    console.log('wanted to add a task: ' , req.body.task); 
-    var task = req.body.task;
-    
-    // connect to database
+router.get('/', function(req, res) {
+	console.log('index was requested');
+	res.render('pages/index.html');
+});
+
+router.post('/signup', function(req, res){
+	var email = req.body.email;
+	var password = req.body.password;
+
+	//validate input
+
+	// connect to database
     MongoClient.connect(dbUrl, function(err, db){
         if(err) throw err;
         console.log('connected to database server : insert');
-        var taskObj = {task:task};
+        var userObj = {email:email, passowrd:password};
         var db = client.db(dbName);
-        var col = db.collection('todos');
+        var col = db.collection('users');
 
         //insert into database
-        col.insertOne(taskObj, function(err, result){
+        col.insertOne(userObj, function(err, result){
             if(err) throw err;
             assert.equal(1, result.insertedCount);
-            console.log('task inserted');
+            console.log('user inserted');
             //render home page
-            res.render('index.html');
+            res.render('pages/test.html');
         });
+		client.close();
     });
 });
 
+router.post('/login', function(req, res){
+	console.log('logging a user in');
+	//validate input
+
+	MongoClient.connect(dbUrl, function(err, db){
+		if(err) throw err;
+		//authenticate user
+		var user = {
+			email: req.body.email,
+			password: req.body.password
+		};
+	
+		var db = client.db(dbName);
+		var col = db.collection('users');
+
+		//find user
+		db.collection.findOne({email:user.email, password: user.password}, function(err, result){
+			if(err) throw err;
+			assert(1, result.count());
+			console.log('yes user exists');
+		});
+
+		client.close();
+	});
+		
+});
+
 module.exports = router;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
