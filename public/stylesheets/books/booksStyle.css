@@ -1,0 +1,30 @@
+h2{
+	text-align: center;
+	font-weight: bold;
+}
+
+label{
+	font-weight: bold;
+	font-size: 18px;
+	text-transform: capitalize;
+}
+
+form{
+	margin: 0 auto;
+	width: 600px;
+}
+
+input{
+	max-width: 600px;
+}
+
+button{
+	float: right;
+}
+
+
+.bookProgress{
+	margin-top: 50px;
+}
+
+

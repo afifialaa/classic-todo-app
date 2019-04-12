@@ -4,13 +4,15 @@ var favicon = require('static-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var uuid = require('uuid/v4');
+
+const session = require('express-session');
 
 //path to routes
 var index = require('./routes/index');
 var todos = require('./routes/todos');
 var users = require('./routes/users');
-
-var ejs = require('ejs');
+var books = require('./routes/books')
 
 var app = express();
 
@@ -22,12 +24,13 @@ app.engine('html', require('ejs').renderFile);
 app.use(favicon());
 app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded());
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// routes
+// routes{ extended: false }
 app.use('/', index);
+app.use('/books', books);
 app.use('/todos', todos);
 app.use('/users', users);
 

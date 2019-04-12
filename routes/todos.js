@@ -1,24 +1,12 @@
 var express = require('express');
 var router = express.Router();
 
+var taskModel = require('../models/taskModel').Task;
+var insertTask = require('../models/taskModel').insertTask;
+
 const assert = require('assert');
 
 const MongoClient = require('mongodb').MongoClient;
-
-//mongoose congif
-const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost:27017/todos');
-var monConn = mongoose.connection;
-monConn.once('open', function(){
-    console.log('mongoose connected');
-});
-
-var TaskSchema = new mongoose.Schema({
-    task:String
-});
-
-//schema -> model
-var TaskModel = mongoose.model('TaskModel', TaskSchema);
 
 //database connection
 const dbUrl = 'mongodb://localhost:27017/';
@@ -40,6 +28,7 @@ router.get('/', function(req, res) {
 			console.log('found everything');
 			//client.close();
             var result = docs;
+			client.close();
             //render page with tasks
             res.render('todos.html', {tasks:result});
 		});
@@ -52,7 +41,7 @@ router.post('/addTask', function(req, res){
     var task = req.body.task;
     
     // connect to database
-    MongoClient.connect(dbUrl, function(err, db){
+    MongoClient.connect(dbUrl, { useNewUrlParser: true }, function(err, db){
         if(err) throw err;
         console.log('connected to database server : insert');
         var taskObj = {task:task};
@@ -65,6 +54,7 @@ router.post('/addTask', function(req, res){
             assert.equal(1, result.insertedCount);
             console.log('task inserted');
             //render home page
+			db.close();
             res.render('todos.html');
         });
     });

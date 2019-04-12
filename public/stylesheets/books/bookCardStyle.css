@@ -1,0 +1,33 @@
+.bookCard{
+	color: white;
+	width: 400px;
+	height: 120px;
+	background-color: #5cb85c;
+	border-radius: 7px;
+	box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);))
+	position: relative;
+	margin-bottom: 30px;
+}
+
+.bookCard h4{
+	text-transform: capitalize;
+	position: relative;
+	top: 20px;
+	left: 20px;
+}
+
+.controls{
+	position: relative;
+	top: 20px;
+	right: 20px;
+}
+
+.controlBtn{
+	color: black;
+	background-color: #5cb85c;
+}
+
+.controls button:not(:first-child){
+	margin-right: 10px;
+}
+

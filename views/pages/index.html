@@ -21,6 +21,11 @@
     <body>
 
     	<div class="content container">
+		<% if(locals.errMsg){ %>
+			<div class="alert alert-danger" role="alert">
+				<%= errMsg %>
+			</div>
+		<% } %>
     		<div class="row">
 
  				<!-- login form -->
