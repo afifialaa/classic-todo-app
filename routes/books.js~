@@ -82,7 +82,6 @@ router.delete('/deleteBook', function(req, res){
 
 router.put('/editBook', function(req, res){
 	console.log('edit book was contacted');
-	console.log('edit data ' + req.body.bookTitle);
 })
 
 module.exports = router;

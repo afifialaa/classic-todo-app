@@ -1,0 +1,12 @@
+{
+    "routes":[
+        {
+            "route":"/books",
+            "address":"http://localhost:8001"
+        },
+        {
+            "routes":"/todos",
+            "address":"http://localhost:8002"
+        }
+    ]
+}

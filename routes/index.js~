@@ -92,7 +92,6 @@ router.post('/login', function(req, res){
 				sess.password = user.password;
 				console.log('this is from session variable ' + sess.email);
 				//log user in
-				//create token
 				jwt.sign({user}, 'secretKey', function(err, token){
 					console.log("*************************************");
 					console.log(token);
