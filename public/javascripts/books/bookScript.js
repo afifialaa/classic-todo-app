@@ -76,6 +76,9 @@ function createCard(bookTitle, pageNum){
 //add book button event
 var addBtn = document.getElementById("addBookBtn");
 addBtn.addEventListener('click', function(e){
+	//prevent default
+	e.preventDefault();
+
 	console.log('button was pressed');
 
 	var bookTitle = document.getElementById('bookTitle').value;
@@ -84,23 +87,37 @@ addBtn.addEventListener('click', function(e){
 	console.log('book: ' + bookTitle);
 	console.log('pageNum: ' + pageNum);
 
-	//prevent default
-	e.preventDefault();
+	var validated = validate(bookTitle, pageNum);
 
-	$.ajax({
-		url: 'books/addBook',
-		type: 'POST',
-		data: {bookTitle: bookTitle, pageNum:pageNum}
-	}).done(function(){
-		console.log('book was added successfully');
-		display();
-		loadBooks();
-	}).fail(function(){
-		console.log('oops... an error has occured');
-	}).always(function(){
-		console.log('completed the assignment');
-	});
+	if(validate(bookTitle, pageNum)){
+		$.ajax({
+			url: 'books/addBook',
+			type: 'POST',
+			data: {bookTitle: bookTitle, pageNum:pageNum}
+		}).done(function(){
+			console.log('book was added successfully');
+			//display();
+			location.reload();
+		}).fail(function(){
+			console.log('oops... an error has occured');
+		}).always(function(){
+			console.log('completed the assignment');
+		});
+	}else{
+		alert('please fill fields');
+		console.log('please fill fields');
+		//reload page
+		location.reload();
+	}
 });
+
+function validate(bookTitle, pageNum){
+	if(bookTitle == "" && pageNum.length == ""){
+		return false;
+	}else{
+		return true;
+	}
+}
 
 function display(){
 	console.log('display');
@@ -112,16 +129,19 @@ function attachDelEvent(){
 	for(i=0; i<delBtn.length; i++){
 		delBtn[i].addEventListener('click', function(e){
 			console.log('delete button was pressed');
+
+			var bookTitle = this.parentNode.previousSibling.previousSibling.textContent;
+			console.log('you are trying to delete ' + bookTitle);
 			
 			//ajax delete request
 			$.ajax({
 				url: 'books/deleteBook',
 				type: 'DELETE',
 				//data and datatype
-				data:{bookTitle:"dummy Name"}
+				data:{bookTitle:bookTitle}
 			}).done(function(data){
 				console.log('book was deleted');
-				console.log(data);
+				location.reload();
 			}).fail(function(){
 				console.log('oops... an error has occured');
 			}).always(function(){

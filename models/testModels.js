@@ -10,7 +10,6 @@ var book = {
     pageNum: '36'
 }
 
-
 var inputBook = new BookModel();
 
 function createBook(){

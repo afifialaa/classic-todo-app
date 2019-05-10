@@ -59,7 +59,7 @@ router.get('/getBooks', function(req, res){
 
 });
 
-//delete books
+//delete book card
 router.delete('/deleteBook', function(req, res){
 	console.log('the book will be deleted');
 	var bookTitle = req.body.bookTitle;
@@ -80,6 +80,7 @@ router.delete('/deleteBook', function(req, res){
 	res.send('deletion from server');
 });
 
+//edit book title and page number
 router.put('/editBook', function(req, res){
 	console.log('edit book was contacted');
 	console.log('edit data ' + req.body.bookTitle);
