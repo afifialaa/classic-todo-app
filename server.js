@@ -1,5 +1,7 @@
 var app = require('./app.js');
 
-app.listen(8000, function(){
+var port = process.env.PORT || 8080;
+
+app.listen(port, function(){
     console.log('todo_app_mongo server is listening at port 8080');
 });

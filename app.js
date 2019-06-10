@@ -8,6 +8,10 @@ var uuid = require('uuid/v4');
 var proxy = require('http-proxy-middleware');
 const session = require('express-session');
 var jwt = require('jsonwebtoken');
+var passport = require('passport');
+
+//database config
+var db = require('./config/dbConfig');
 
 //path to routes
 var index = require('./routes/index');
@@ -32,6 +36,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(session({secret:'secretKey'}));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(passport.initialize());
+app.use(passport.session());
 
 
 // routes{ extended: false }

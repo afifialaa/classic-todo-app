@@ -1,11 +1,13 @@
 var mongoose = require('mongoose');
+
 var mongoDB = 'mongodb://localhost:27017/todos';
+
 mongoose.connect(mongoDB, {useNewUrlParser:true});
 var db = mongoose.connection;
 
 //connection opened
 db.on('open', function(){
-    console.log('connection established');
+    console.log('connection established*... dbConfig');
 })
 
 //connection failed

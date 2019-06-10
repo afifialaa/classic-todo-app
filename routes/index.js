@@ -1,5 +1,8 @@
 var express = require('express');
 var router = express.Router();
+var app = express();
+
+var User = require('../models/userModel.js');
 
 var bodyParser = require('body-parser');
 var task = require('../models/taskModel').Task;
@@ -42,9 +45,9 @@ router.post('/signup', function(req, res){
 	// connect to database
     MongoClient.connect(dbUrl, function(err, db){
         if(err) throw err;
-        console.log('connected to database server : insert');
+        console.log('connected to database server : insert.... index.js');
         var userObj = {email:email, passowrd:password};
-        var db = client.db(dbName);
+        var db = db.db(dbName);
         var col = db.collection('users');
 
         //insert into database
@@ -59,76 +62,45 @@ router.post('/signup', function(req, res){
     });
 });
 
+function authenticate(req, res, next){
+
+    var user = {
+      email: req.body.email,
+      password: req.body.password
+    };
+
+  MongoClient.connect(dbUrl, function(err, db){
+    if(err) throw err;
+
+    var dbo = db.db("todos");
+
+    var sess;
+    //find user
+    dbo.collection("users").findOne({email:req.body.email, password:req.body.password}, function(err, result){
+      if(err){
+        //flash error and redirect to login
+        console.log('oops... something went wrong');
+        res.redirect('/');
+      }else if(result){
+        //found user
+        console.log(result);
+        app.set('email', user.email);
+        db.close();
+        next();
+      }else if(result == null){
+        res.redirect('/');
+      } 
+      
+    });
+  });
+
+}
+
 //user logging in
-router.post('/login', function(req, res){
+router.post('/login', authenticate, function(req, res){
 	//validate input
-
-	MongoClient.connect(dbUrl, function(err, db){
-		if(err) throw err;
-
-		//authenticate user
-		var user = {
-			email: req.body.email,
-			password: req.body.password
-		};
-	
-		var db = client.db(dbName);
-		var collection = db.collection('users');
-
-		var sess;
-		//find user
-		collection.findOne({email:user.email, password:user.password}, function(err, result){
-			if(err){
-				//flash error and redirect to login
-				throw err;
-				console.log('Wrong email or password');
-				var errMsg = 'Wrong email or password';
-				res.render('pages/index.html', {errMsg:errMsg});
-			}else if(result){
-				//found user
-				//set session
-				sess = req.session;		
-				sess.email = user.email;
-				sess.password = user.password;
-				console.log('this is from session variable ' + sess.email);
-				//log user in
-				//create token
-				jwt.sign({user}, 'secretKey', function(err, token){
-					console.log("*************************************");
-					console.log(token);
-				});
-				var errMsg = 'logged in successfully';
-				res.redirect('/todos');
-			}else if(!result){
-				console.log('not result');
-				var errMsg = 'Worng email or password';
-				res.render('pages/index.html', {errMsg: errMsg});
-			}
-						
-		});
-
-	});
-		
+	console.log('logging in ......')
+	res.render('pages/dashboard.html', {email:app.get('email')});
 });
 
 module.exports = router;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

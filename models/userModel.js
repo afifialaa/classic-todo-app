@@ -6,14 +6,17 @@ var Schema = mongoose.Schema;
 
 //creating task schema
 var userSchema = new Schema({
-	firstName:String,
-	lastName:String,
-	email:String,
-	passowrd:String
+	email: {
+    type: String,
+    unique: true,
+    required: true,
+    trim: true
+  },
+  password: {
+  	type: String,
+  	required: true
+  }
 });
-
-//creating model
-var User = mongoose.model('users', userSchema);
 
 //create user method
 var createUser = function(user){
@@ -24,19 +27,28 @@ var createUser = function(user){
 };
 
 //find user
-var findUser = function(user){
-	user.findOne(function(err){
-		if(err) throw err;
-		console.log('found user');
-	});
-};
+userSchema.statics.authenticate = function (email, password, callback) {
+  User.findOne({ email: email })
+    .exec(function (err, user) {
+      if (err) {
+        return callback(err)
+      } else if (!user) {
+        var err = new Error('User not found.');
+        err.status = 401;
+        return callback(err);
+      }
+      if(user.password == password){
+      	return callback(null, user);
+      }else{
+      	return callback();
+      }
+    });
+}
 	
 //exporting the model
-module.exports.User = User;
+var User = mongoose.model('users', userSchema);
+module.exports = User;
 
 //exporting create user function
 module.exports.createUser = createUser;
-
-//exporting find user function
-module.exports.findUser = findUser;
 
