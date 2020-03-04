@@ -4,6 +4,20 @@ loadBooks();
 
 var contetnDiv = document.getElementById('');
 
+function test(){
+	const formElement = document.getElementById('addBook');
+	const formData = new FormData(formElement);
+
+	const body = {
+		title: formData.get('title'),
+		pageNum: formData.get('pageNum')
+	}
+
+	console.log(body.title);
+	console.log(body.pageNum);
+	
+}
+
 function loadBooks(){
 	$.ajax({
 		url: 'books/getBooks',
@@ -11,8 +25,7 @@ function loadBooks(){
 		dataType: 'json',
 		success: function(data){
 			console.log('fetched the data');
-			var books = JSON.stringify(data);
-			console.log(JSON.stringify(data));
+			const books = JSON.stringify(data);
 			for(i=0; i<data.length; i++){
 				createCard(data[i].bookTitle, data[i].pageNum);
 			}
@@ -74,26 +87,23 @@ function createCard(bookTitle, pageNum){
 }
 
 //add book button event
-var addBtn = document.getElementById("addBookBtn");
+const addBtn = document.getElementById("addBookBtn");
 addBtn.addEventListener('click', function(e){
-	//prevent default
 	e.preventDefault();
 
-	console.log('button was pressed');
+	const formElement = document.getElementById('addBook');
+	const formData = new FormData(formElement);
 
-	var bookTitle = document.getElementById('bookTitle').value;
-	var pageNum = document.getElementById('pageNum').value;
+	const body = {
+		title: formData.get('bookTitle'),
+		pageNum: formDate.get('pageNum')
+	}
 
-	console.log('book: ' + bookTitle);
-	console.log('pageNum: ' + pageNum);
-
-	var validated = validate(bookTitle, pageNum);
-
-	if(validate(bookTitle, pageNum)){
+	if(validate(body.title, body.pageNum)){
 		$.ajax({
 			url: 'books/addBook',
 			type: 'POST',
-			data: {bookTitle: bookTitle, pageNum:pageNum}
+			data: JSON.stringify(body)
 		}).done(function(){
 			console.log('book was added successfully');
 			//display();
@@ -112,15 +122,8 @@ addBtn.addEventListener('click', function(e){
 });
 
 function validate(bookTitle, pageNum){
-	if(bookTitle == "" && pageNum.length == ""){
-		return false;
-	}else{
-		return true;
-	}
-}
-
-function display(){
-	console.log('display');
+	
+	return true;
 }
 
 //attach delete handler

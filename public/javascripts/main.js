@@ -1,103 +1,121 @@
-var listItems = document.getElementsByTagName('LI');
-const todo_list = document.getElementById('todo-list');
-const ul = document.getElementsByTagName('ul');
-const todos = document.getElementsByClassName('todos');
-const items = document.getElementsByClassName('items');
+const form = document.getElementById("todosForm");
+const submitBtn = document.getElementById("submitBtn");
 
-// create a remove button
-for(var i=0; i<listItems.length; i++){
-    var span = document.createElement("SPAN");
-    var txt = document.createTextNode("\u00D7");
-    span.className = "remove";
+const taskInput = document.getElementById('myInput');
+
+getTasks();
+
+// Adding click event to add button
+submitBtn.addEventListener('click', (e) => {
+	console.log('button was clicked');
+	let body = {
+		task: taskInput.value
+	}
+	sendData(body);
+})
+
+// Sending tasks to server
+function sendData(body) {
+    let xhr = new XMLHttpRequest();
+    xhr.open('POST', 'http://localhost:8080/todos/addTask', true);
+
+    xhr.setRequestHeader('Content-Type', 'application/json');
+
+    xhr.onreadystatechange = () => {
+        if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+            // Request finished. Do processing here.
+            console.log('finished processing');
+        }
+    }
+    xhr.send(JSON.stringify(body));
+}
+
+// Fetching tasks from sever
+function getTasks() {
+
+    let xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            // Typical action to be performed when the document is ready:
+            const res = JSON.parse(xhr.responseText);
+            for(let i=0; i<res.length; i++){
+                newElement(res[i].task);
+            }
+        }
+    };
+    xhr.open("GET", 'http://localhost:8080/todos/getTasks', true);
+    xhr.send();
+}
+
+
+// Create close button with every item
+function createCloseButton() {
+    let myNodelist = document.getElementsByTagName("LI");
+    for (let i = 0; i < myNodelist.length; i++) {
+        var span = document.createElement("SPAN");
+        var txt = document.createTextNode("\u00D7");
+        span.className = "close";
+        span.appendChild(txt);
+        myNodelist[i].appendChild(span);
+    }
+
+    // Close event handle.
+    let closeBtn = document.getElementsByClassName("close");
+    console.log(closeBtn.length);
+
+    for (let i = 0; i < closeBtn.length; i++) {
+        closeBtn[i].addEventListener('click', function (e) {
+            console.log('pressing button');
+        })
+    }
+
+    let list = document.querySelector('ul');
+    list.addEventListener('click', (ev) => {
+        if (ev.target.tagName === 'LI') {
+            ev.target.classList.toggle('checked');
+        }
+    }, false);
+}
+
+function newElement(inputValue) {
+    let li = document.createElement("li");
+    let t = document.createTextNode(inputValue);
+    li.appendChild(t);
+
+    document.getElementById("myUL").appendChild(li);
+
+    let span = document.createElement("SPAN");
+    let txt = document.createTextNode("\u00D7");
+    span.className = "close";
     span.appendChild(txt);
-    listItems[i].appendChild(span);
-}
+    li.appendChild(span);
 
-// remove button functionality front end
-var remove = document.getElementsByClassName("remove");
-for(var i=0; i<remove.length; i++){
-    remove[i].onClick = function(){
-        var div = this.parentElement;
+	// Close button handle
+    span.addEventListener('click', function(e){
+        let div = this.parentElement;
         div.style.display = "none";
-    }
+	    removeTask(e);
+    })
+
+    li.addEventListener('click', function(e){
+        li.classList.toggle('checked');
+    })
 }
 
-// remove button functionallity back end
-for(var i=0; i<close.length; i++){
-    remove[i].addEventListener('click', function(){
-	console.log('tried to remove a task');
-	console.log(this.previousSibling);
-    });
-}
+// Removing task handle.
+function removeTask(e){
+	let body = {
+		task: e.target.previousSibling.textContent
+	};
 
-let count = 0;
-
-//clicking on the item functionality
-for(var i=0; i<items.length; i++){
-    items[i].addEventListener('click', function(){
-	this.firstChild.checked = !this.firstChild.checked;
-	console.log('item is clicked on');
-	// counting checked tasks
-	if(this.firstChild.checked == true)
-	    count++;
-	else if(this.firstChild.checked == false)
-	    count--;
-    });
-}
-
-//validating input
-function validateInput(input){
-    if(input == ""){
-	//invalid input
-	console.log('empty string');
-    	return false;
-    }
-    else{
-	   //valid input
-	   return true;
-    }
-}
-
-const form = document.forms['todos'];
-//form submition
-form.addEventListener('submit', function(e){
-    //prevent it being sent
-    e.preventDefault();
-    console.log('someone submitted the form');
-
-    const input = document.forms['todos']['task'].value;
-    var validation = validateInput(input);
-    if(validation == true){
-        //if valid, send data
-        sendData(input);
-	    console.log('sending the data');
-    }
-    else if(!validation == false){
-    	//if not valid return false
-    	console.log('not valid data');
-    	return false;
-    }
-});
-
-// sending data using ajax
-function sendData(input){
-
-    $.ajax({
-    	type:'POST',
-    	url: 'ajaxCall',
-    	data : {inputTask: input},
-    	success: function(){
-    	    console.log('success!!!!!!');
-    	},
-    	error: function(){
-    	    console.log('failed!!!!!');
+	let xhr = new XMLHttpRequest();
+	xhr.open('POST', 'http://localhost:8080/todos/deleteTask', true);
+    	xhr.setRequestHeader('Content-Type', 'application/json');
+    	xhr.onreadystatechange = () => {
+        	if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+            		// Request finished. Do processing here.
+            		console.log('finished processing');
+        	}
     	}
-    });
+    	xhr.send(JSON.stringify(body));
 }
-
-//remove button client side
-
-
-//add select effect
-
-//add hover effect
