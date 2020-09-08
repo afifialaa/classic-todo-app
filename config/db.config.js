@@ -1,9 +1,9 @@
-var mongoose = require('mongoose');
+let mongoose = require('mongoose');
 
-var mongoDB = 'mongodb://localhost:27017/todos';
+let mongoDB = 'mongodb://localhost:27017/todos';
 
 mongoose.connect(mongoDB, {useNewUrlParser:true});
-var db = mongoose.connection;
+let db = mongoose.connection;
 
 //connection opened
 db.on('open', function(){
